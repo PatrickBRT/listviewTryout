@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListView } from 'react-native';
-import { times } from 'lodash';
+import { times, random } from 'lodash';
 
 import SGListView from 'react-native-sglistview';
 import {
@@ -24,9 +24,16 @@ export default class ListviewTryout extends Component {
     this.items = [];
     let items = this.items;
     times(500, () => {
-      items.push({
-        a: 'b',
-      });
+      const nextRandom = random(0,100);
+      if (nextRandom % 2 === 0) {
+        items.push({
+          type: 'image',
+        });
+      } else {
+        items.push({
+
+        });
+      }
     });
 
     this.renderRow = this.renderRow.bind(this);
@@ -46,15 +53,27 @@ export default class ListviewTryout extends Component {
     );
   }
 
+  renderCard(rowData, rowID) {
+    const content = (<Text style={{fontSize: 30, alignSelf: 'center'}}>{rowID}</Text>);
+    if (rowData.type) {
+      return (<Image
+        style={{height: 240, width: 240, borderColor: 'gray', borderWidth: 1, borderStyle: 'solid'}}
+        source={TEST_IMAGE}
+      >
+        {content}
+      </Image>);
+    }
+    return (
+      <View style={{width: 240, height: 240, borderColor: 'gray', borderWidth: 1, borderStyle: 'solid'}}>
+        {content}
+      </View>
+    );
+  }
+
   renderRow(rowData, sectionID, rowID) {
     return (
       <View style={{flexDirection: 'row'}}>
-        <Image
-          style={{height: 240, width: 240, borderColor: 'gray', borderWidth: 1, borderStyle: 'solid'}}
-          source={TEST_IMAGE}
-        >
-        <Text style={{fontSize: 30, alignSelf: 'center'}}>{rowID}</Text>
-        </Image>
+        {this.renderCard(rowData, rowID)}
       </View>
     );
   }
